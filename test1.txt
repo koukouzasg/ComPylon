@@ -1,0 +1,15 @@
+program test{
+	declare x1,x2 enddeclare
+	x1:=9;
+	select (x2)
+	1: {x2:=4}
+	3: {x2:=1}
+	2: {x2:=2}
+	default: {x2:=10}
+}
+
+
+function func(in xpxxo){
+	x1:=2
+	return (x1)
+}
