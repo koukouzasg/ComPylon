@@ -2,7 +2,7 @@
 #AM   :         2468      -     2044
 
 import sys
-#print("Expected factor and received " ,state, "at line:",line,"\n")
+#print("Expected '' and received '" ,buffer, "'at line :",line,"\n")
 
 white = 0
 character = 1
@@ -284,7 +284,7 @@ def lexicalAnalyser():
                 exit(1)
     if state == identifierTK:
         state = isBooked(buffer)
-    print("State is ", state,buffer)
+
 
 def program():
     global state
@@ -293,15 +293,14 @@ def program():
         lexicalAnalyser()
         if state == identifierTK:
             block()
-            print("be4 unx",state,buffer)
-            if state != EOFTK and state!= functionTK and state!= procedureTK:
+            if state != EOFTK and state != functionTK and state != procedureTK:
                 print("Unexpected text after code Block")
                 exit(1)
         else:
-            print("Expected program name at line:",line,"\n")
+            print("Expected program name and received '", buffer, "'at line: ", line, "\n")
             exit(1)
     else:
-        print("Expected program keyword at line:",line,"\n")
+        print("Expected 'program' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -314,20 +313,17 @@ def block():
             declarations()
         subprograms()
         sequence()
-        print("after seq",state,buffer)
         if state == rightBracketTK:
-            print("317",state,buffer)
             lexicalAnalyser()
         elif state == identifierTK or (state >= 44 and state <= 63):
-            print("at block",state,buffer)
-            print("Expected semicolon between statements at line",line,"\n")
+            print("Expected ';' between statements and received '", buffer, "'at line :", line, "\n")
             exit(1)
         else:
-            print(" '}' was expected at line:",line,"\n")
+            print("Expected '}' and received '", buffer, "'at line :", line, "\n")
             exit(1)
 
 
-def declarations():  #do
+def declarations():
     global state
     lexicalAnalyser()
     if state == identifierTK:
@@ -335,7 +331,7 @@ def declarations():  #do
     if state == enddeclareTK:
         lexicalAnalyser()
     else:
-        print("Expected 'enddeclare' at line:",line,"\n")
+        print("Expected 'enddeclare' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -347,7 +343,7 @@ def varlist():
         if state == identifierTK:
             lexicalAnalyser()
         else:
-            print("Expected identifier after ',' at  line:",line,"\n")
+            print("Expected identifier after ',' and received '", buffer, "'at line :", line, "\n")
             exit(1)
 
 
@@ -359,37 +355,33 @@ def subprograms():
 
 def func():
     global state
-    print("func call", state)
     lexicalAnalyser()
     if state == identifierTK:
         funcbody()
     else:
-        print("Expected function or procedure name at line:",line,"\n")
+        print("Expected function or procedure name and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
 def funcbody():
-    print("be4 formalpars", state)
     formalpars()
     block()
 
 
-def formalpars():  #
+def formalpars():
     global state
-    print("be4,",state)
     lexicalAnalyser()
-    print("after,",state)
     if state == leftParenthesisTK:
         lexicalAnalyser()
         if state != rightParenthesisTK:
             formalparlist()
     else:
-        print("Expected '(' at line:",line,"\n")
+        print("Expected '(' and received '", buffer, "'at line :", line, "\n")
         exit(1)
     if state == rightParenthesisTK:
         lexicalAnalyser()
     else:
-        print("Expected ')' at line:",line,"\n")
+        print("Expected ')' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -408,14 +400,14 @@ def formalparitem():
         if state == identifierTK:
             lexicalAnalyser()
         else:
-            print("Expected parameter name at line:",line,"\n")
+            print("Expected parameter name and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected 'in' or 'inout' at line:",line,"\n")
+        print("Expected 'in' or 'inout' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
-def sequence():  #
+def sequence():
     global state
     statement()
     while state == semicolonTK:
@@ -430,14 +422,13 @@ def brackets_seq():
     if state == rightBracketTK:
         lexicalAnalyser()
     else:
-        print("Expected '}' at line:",line,"\n")
+        print("Expected '}' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
 def brack_or_stat():
     global state
     if state == leftBracketTk:
-        print("brackts",state,buffer)
         brackets_seq()
     else:
         statement()
@@ -472,7 +463,7 @@ def assignment_stat():
         lexicalAnalyser()
         expression()
     else:
-        print("Expected ':' at line:",line,"\n")
+        print("Expected ':' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -484,14 +475,13 @@ def if_stat():
         condition()
         if state == rightParenthesisTK:
             lexicalAnalyser()
-            print("state at if " ,state, buffer)
             brack_or_stat()
             elsepart()
         else:
-            print("Expected ')' at line:",line,"\n")
+            print("Expected ')' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected '('  at line:",line,"\n")
+        print("Expected '(' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -505,11 +495,11 @@ def elsepart():
             if state == rightCaretTK:
                 lexicalAnalyser()
             else:
-                print("Expected ']' and got ", state, "at line :", line, "\n")
+                print("Expected ']' and received '", buffer, "'at line :", line, "\n")
         else:
-            print("Expected else and got ", state, "at line :", line, "\n")
+            print("Expected 'else' and received '", buffer, "'at line :", line, "\n")
     else:
-        print("Expected '[' and got ",state,"at line :",line,"\n")
+        print("Expected '[' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -523,10 +513,10 @@ def while_stat():
             lexicalAnalyser()
             brack_or_stat()
         else:
-            print("Expected ')' at line:",line,"\n")
+            print("Expected ')' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected '(' at line:",line,"\n")
+        print("Expected '(' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -541,13 +531,13 @@ def select_stat():
             if state == rightParenthesisTK:
                 lexicalAnalyser()
             else:
-                print("Expected ')' at line:",line,"\n")
+                print("Expected ')' and received '", buffer, "'at line :", line, "\n")
                 exit(1)
         else:
-            print("Expected identifier at line:",line,"\n")
+            print("Expected identifier and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected '(' at line:",line,"\n")
+        print("Expected '(' and received '", buffer, "'at line :", line, "\n")
         exit(1)
     while state == constantTK:
         number += 1
@@ -560,7 +550,7 @@ def select_stat():
             lexicalAnalyser()
             brack_or_stat()
         else:
-            print("Expected ':' at line:",line,"\n")
+            print("Expected ':' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     if state == defaultTK:
         lexicalAnalyser()
@@ -569,10 +559,10 @@ def select_stat():
             lexicalAnalyser()
             brack_or_stat()
         else:
-            print ("Expected ':' after default at line:",line,"\n")
+            print("Expected ':' after default and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected default at line:",line,"\n")
+        print("Expected 'default' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -588,13 +578,13 @@ def do_while_stat():
             if state == rightParenthesisTK:
                 lexicalAnalyser()
             else:
-                print("Expected ')' at line:",line,"\n")
+                print("Expected ')' and received '", buffer, "'at line :", line, "\n")
                 exit(1)
         else:
-            print("Expected '(' at line:",line,"\n")
+            print("Expected '(' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected 'while' keyword at line:",line,"\n")
+        print("Expected 'while' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -616,45 +606,38 @@ def return_stat():
             if state == rightParenthesisTK:
                 lexicalAnalyser()
             else:
-                print("Expected ')' at line:",line,"\n")
+                print("Expected ')' and received '", buffer, "'at line :", line, "\n")
                 exit(1)
         else:
-            print("Expected '(' at line:",line,"\n")
+            print("Expected '(' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected return keyword at line:",line,"\n")
+        print("Expected 'return' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
 def print_stat():
     global state
-
-    #lexicalAnalyser()
-
     if state == printTK:
         lexicalAnalyser()
         if state == leftParenthesisTK:
-            print("print", state, buffer)
             lexicalAnalyser()
-            print("print after", state, buffer)
             expression()
-            print("print expre", state, buffer)
             if state == rightParenthesisTK:
                 lexicalAnalyser()
             else:
-                print("Expected ')' at line:",line,"\n")
+                print("Expected ')' and received '", buffer, "'at line :", line, "\n")
                 exit(1)
         else:
-            print("Expected '(' at line:",line,"\n")
+            print("Expected '(' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected print keyword at line:",line,"\n")
+        print("Expected 'print' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
 def call_stat():
     global state
-    #lexicalAnalyser()
     if state == callTK:
         lexicalAnalyser()
         if state == identifierTK:
@@ -662,25 +645,24 @@ def call_stat():
             if state == leftParenthesisTK:
                 actualpars()
             else:
-                print("Expected '(' at line:",line,"\n")
+                print("Expected '(' and received '", buffer, "'at line :", line, "\n")
                 exit(1)
         else:
-            print("Expected identifier at line:",line,"\n")
+            print("Expected identifier and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected call keyword at line:",line,"\n")
+        print("Expected 'call' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
 def actualpars():
     global state
-    #lexicalAnalyser()
     if state != rightParenthesisTK:
         actualparlist()
     if state == rightParenthesisTK:
         lexicalAnalyser()
     else:
-        print("Expected ')' at line:",line,"\n")
+        print("Expected ')' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -703,10 +685,10 @@ def actualparitem():
         if state == identifierTK:
             lexicalAnalyser()
         else:
-            print("Expected identifier at line:",line,"\n")
+            print("Expected identifier and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
-        print("Expected 'in' or 'inout' keyword at line:",line,"\n")
+        print("Expected 'in' or 'inout' keyword and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -736,10 +718,10 @@ def boolfactor():
             if state == rightCaretTK:
                 lexicalAnalyser()
             else:
-                print("Expected ']' at line:",line,"\n")
+                print("Expected ']' and received '", buffer, "'at line :", line, "\n")
                 exit(1)
         else:
-            print("Expected '[' at line:",line,"\n")
+            print("Expected '[' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     elif state == leftCaretTK:
         lexicalAnalyser()
@@ -747,7 +729,7 @@ def boolfactor():
         if state == rightCaretTK:
             lexicalAnalyser()
         else:
-            print("Expected ']' at line:",line,"\n")
+            print("Expected ']' and received '", buffer, "'at line :", line, "\n")
             exit(1)
     else:
         expression()
@@ -757,7 +739,6 @@ def boolfactor():
 
 def expression():
     global state
-    #lexicalAnalyser()
     optional_sign()
     term()
     while state == plusTK or state == minusTK:
@@ -786,13 +767,11 @@ def factor():
             print("Expected ')' at line:",line,"\n")
             exit(1)
     elif state == identifierTK:
-        print("factor ", state, buffer)
         lexicalAnalyser()
-        print("factor after", state, buffer)
         if state == leftParenthesisTK:
             idtail()
     else:
-        print("Expected factor and received " ,state, "at line:",line,"\n")
+        print("Expected factor and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -807,7 +786,7 @@ def relational_oper():
     if state == equalTK or state == lessTK or state == lessEQTK or state == differentTK or state == moreEQTK or state == moreTK:
         lexicalAnalyser()
     else:
-        print("Expected compare operator at line:",line,"\n")
+        print("Expected compare operator and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -816,7 +795,7 @@ def add_oper():
     if state == plusTK or state == minusTK:
         lexicalAnalyser()
     else:
-        print("Expected '+' or '-' at line:",line,"\n")
+        print("Expected '+' or '-' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
@@ -825,13 +804,12 @@ def mul_oper():
     if state == multiplyTK or state == divideTK:
         lexicalAnalyser()
     else:
-        print("Expected '*' or '/' at line:",line,"\n")
+        print("Expected '*' or '/' and received '", buffer, "'at line :", line, "\n")
         exit(1)
 
 
 def optional_sign():
     global state
-    #lexicalAnalyser()
     if state == plusTK or state == minusTK:
         add_oper()
 
