@@ -1,8 +1,4 @@
-#Names: Koukouzas Georgios-Gkoutzios Nikolaos
-#AM   :         2468      -     2044
-
 import sys
-#print("Expected '' and received '" ,buffer, "'at line :",line,"\n")
 
 white = 0
 character = 1
@@ -195,8 +191,6 @@ def readCharacter():
         output = 18
     elif c == 'EOF':
         output = 19
-    #else:
-       # output = 19
     return output
 
 
