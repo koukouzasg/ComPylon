@@ -254,10 +254,8 @@ def lex():
     state = STATE0
     while STATE0 <= state <= STATE9:
         c = inputFile.read(1)
-        # print "in " + c
         if len(bufferWord) < 31:
             bufferWord += c
-            # print "buff  " +bufferWord
         col = readNext()
         state = stateArray[state][col]
         if state == STATE0:
@@ -268,8 +266,6 @@ def lex():
             sys.exit(NOENDCOMMENTSTK)
 
     if state == identifierTK or state == constantTK or state == lessTK or state == moreTK or state == divideTK or state == colonTK:
-        # print "mpainw" + str(state)
-        # print "flagEOF "+ str(flagEOF)
         if not flagEOF:
             index = inputFile.tell() - 1
             inputFile.seek(index, 0)
